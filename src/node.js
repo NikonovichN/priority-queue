@@ -8,27 +8,30 @@ class Node {
 	}
 
 	appendChild(node) {
-		if( this.left == null ){
-			if( this.left ){
+		if( this.left === null ){
+			/*if( this.left ){
 				this.left.parent = null;
-			}
+			}*/
 
 			this.left = node;
-
-			if( this.left ){
+			this.left.parent = this;
+			//console.log(this);
+			/*if( this.left ){
 				this.left.parent = this;
-			}			
+			}	*/		
 			console.log('left');
-		}else if( this.right == null ){
-			if( this.right ){
+		}else if( this.right === null ){
+			/*if( this.right ){
 				this.right.parent = null;
-			}
+			}*/
 
 			this.right = node;
+			this.right.parent = this;
+			//console.log(this);
 
-			if( node ){
+			/*if( this.left ){
 				this.right.parent = this;
-			}		
+			}	*/	
 			console.log('right');	
 		}else{
 			return;
@@ -36,17 +39,15 @@ class Node {
 	}
 
 	removeChild(node) {
-		//console.log( this );
 		if( this.left == node ){
+			this.left.parent = null;
 			this.left = null;
 		}else if( this.right == node ){
+			this.right.parent = null;
 			this.right = null;
-		}else if( this.parent == node ){
-			//this.parent = null;
-		}else{
+		}else if( this.right != node && this.left != node ){
 			throw Error(error);
 		}
-		//this.left = null;
 	}
 
 	remove() {
@@ -56,42 +57,79 @@ class Node {
 	}
 
 	swapWithParent() {
-		//console.log( this.parent.right  );
-        if( this.parent == null ){
+		if( this.parent == null ){
             return;
-        }
-        if( this.parent.left != null && this.parent.parent == null ){
-            this.parent.parent = this;
-            //console.log( this );          
-        }else if( this.parent.parent != null && this.right == null ){
-            //console.log( '---------------------------------------------' );
-            //console.log( this );
-            //this.parent.left = null;
-            //this.parent.parent = this;
-            //this.parent.parent.parent = this.parent;
-            //this.left = this.parent.parent;
-            //this.parent.parent.left = null;
-            //this.parent.parent.left = this;
-            //this.parent.parent.parent.left = this;
-            //this.left = this.parent;
-            var root = this.parent.parent;
-            root.left = null;
-            var child = this.parent;
-            child.parent = this;
-            child.left = null;
-            //child.parent.left = 
-            child.parent.parent = root;
-            this.left = child;
-            //root.appendChild(child);
-			//console.log( this.left );
-		} 
-		if( this.parent.right != null ){
-			console.log(this);
-			//this.right = this.parent;
-			//this.parent = this;
-			//this.parent.parent = this.parent.right;
-			console.log('----------------------------------');
-			//console.log(this.parent.parent);
+		}
+
+		var copyThiNode = this;
+		var rootOfThis = this.parent;
+		var leftOfThis = this.left;
+		var rightOfThis = this.right;
+
+		if( rootOfThis.left == this ){ // If I`m left
+			//console.log( '--- L E F T ---- Of This' );
+			if( this.parent.parent ){
+				console.log(this);
+				if( this.parent.parent.right == this.parent ){
+					this.parent = this.parent.parent;
+					this.parent.right = this;
+					rootOfThis.left = this.left;
+					rootOfThis.right = this.right;
+					rootOfThis.parent = this;
+					this.left = rootOfThis;
+				}else{
+					this.parent = this.parent.parent;
+					this.parent.left = this;
+
+					rootOfThis.left = this.left;
+					rootOfThis.right = this.right;
+					rootOfThis.parent = this;
+					this.left = rootOfThis;
+				}
+			}else{
+				if( this.parent.right != null ){
+					this.right = this.parent.right;
+				}
+		
+				if( leftOfThis != null ){
+					leftOfThis.parent = rootOfThis;
+				}
+
+				if( rightOfThis != null ){
+					rightOfThis.parent = rootOfThis;
+				}
+
+				if( rootOfThis != null ){
+					rootOfThis.parent = this;
+					rootOfThis.left = leftOfThis;
+					rootOfThis.right = rightOfThis;					
+				}				
+				
+				this.left = rootOfThis;
+				this.parent = null;
+			}
+		}else if( rootOfThis.right == this ){
+			//console.log( '--- R I G H T --- Of This' );
+			var currentLeft = this.parent.left;
+			currentLeft.parent = this;
+
+			if( leftOfThis != null ){
+				leftOfThis.parent = rootOfThis;
+			}
+
+			if( rightOfThis != null ){
+				rightOfThis.parent = rootOfThis;
+			}
+
+			if( rootOfThis != null ){
+				rootOfThis.parent = this;
+				rootOfThis.left = leftOfThis;
+				rootOfThis.right = rightOfThis;					
+			}				
+			
+			this.right = rootOfThis;
+			this.left = currentLeft;
+			this.parent = null;
 		}
 	}
 }
