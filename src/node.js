@@ -9,30 +9,30 @@ class Node {
 
 	appendChild(node) {
 		if( this.left === null ){
-			/*if( this.left ){
+			if( this.left ){
 				this.left.parent = null;
-			}*/
+			}
 
 			this.left = node;
 			this.left.parent = this;
 			//console.log(this);
-			/*if( this.left ){
+			if( this.left ){
 				this.left.parent = this;
-			}	*/		
-			console.log('left');
+			}		
+			//console.log('left');
 		}else if( this.right === null ){
-			/*if( this.right ){
+			if( this.right ){
 				this.right.parent = null;
-			}*/
+			}
 
 			this.right = node;
 			this.right.parent = this;
 			//console.log(this);
 
-			/*if( this.left ){
+			if( this.left ){
 				this.right.parent = this;
-			}	*/	
-			console.log('right');	
+			}
+			//console.log('right');	
 		}else{
 			return;
 		}
@@ -69,7 +69,6 @@ class Node {
 		if( rootOfThis.left == this ){ // If I`m left
 			//console.log( '--- L E F T ---- Of This' );
 			if( this.parent.parent ){
-				console.log(this);
 				if( this.parent.parent.right == this.parent ){
 					this.parent = this.parent.parent;
 					this.parent.right = this;
